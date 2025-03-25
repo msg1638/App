@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.material:material:1.7.0")
+    implementation ("androidx.appcompat:appcompat:1.6.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
     // Import the Firebase BoM

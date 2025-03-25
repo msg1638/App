@@ -1,31 +1,41 @@
 package com.example.fcmtest
 
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.fcmtest.ui.theme.FCMtestTheme
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        val btnCamera = findViewById<Button>(R.id.btnCamera)
+        val btnSettings = findViewById<Button>(R.id.btnSettings)
+        val btnConnect = findViewById<Button>(R.id.btnConnect)
+
+        btnSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnConnect.setOnClickListener {
+            // 연결 기능 구현
+        }
+
+        btnCamera.setOnClickListener {
+            // 카메라 보기 기능 구현
+        }
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task. isSuccessful) {
@@ -39,17 +49,7 @@ class MainActivity : ComponentActivity() {
             Toast.makeText(this, "FCM Token: $token", Toast.LENGTH_SHORT).show()
         })
 
-        enableEdgeToEdge()
-        setContent {
-            FCMtestTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
+
     }
     override fun onStart() {
         super.onStart()
@@ -95,19 +95,3 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FCMtestTheme {
-        Greeting("Android")
-    }
-
-}
