@@ -31,6 +31,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".FallDetailActivity" />
+        <activity android:name=".VideoPlayerActivity"/>
+        <activity android:name=".FallDetectionListActivity"/>
+
+
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
