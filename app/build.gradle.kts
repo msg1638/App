@@ -41,15 +41,17 @@ android {
 }
 
 dependencies {
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
-    implementation ("com.google.android.material:material:1.7.0")
-    implementation ("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-    implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
+    implementation ("com.google.android.material:material:1.12.0")
+    implementation ("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.google.firebase:firebase-messaging-ktx:24.1.1")
     // Import the Firebase BoM
-    implementation ("com.google.firebase:firebase-installations:17.0.0")
-    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation ("com.google.firebase:firebase-installations:18.0.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.11.0"))
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation("com.google.firebase:firebase-analytics")

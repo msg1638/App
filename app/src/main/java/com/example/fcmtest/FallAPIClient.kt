@@ -1,9 +1,6 @@
 package com.example.fcmtest
 
-import android.app.Activity
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import okhttp3.MediaType.Companion.toMediaType
@@ -12,41 +9,41 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
-class FCMTokenManager(private val context: Context) {
-
-    private var serverUrl: String = "" //서버 URL
+object FallAPIClient {
+    private var serverUrl: String = "http://10.0.2.2:5000" //서버 URL
 
     // 서버 URL을 설정하는 함수
     fun setServerUrl(url: String) {
         val formattedUrl = when {
             url.startsWith("http://") -> {
-                "$url:5000/register_token"
+                "$url:5000"
             }
             else -> {
-                "http://$url:5000/register_token"
+                "http://$url:5000"
             }
         }
         serverUrl = formattedUrl
         Log.d("ServerUrl: ", serverUrl)
     }
-
+    fun GetServerUrl(): String{
+        return serverUrl
+    }
 
     // 서버로 토큰 전송하는 함수
     fun sendTokenToServer() { //토큰 전달 함수
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.d("Fetching FCM registration token failed", "fcm 토큰얻기 실패")
-                showToast("FCM 토큰 얻기 실패")
                 return@OnCompleteListener
             }
-
+            val tokenUrl = "$serverUrl/register_token"
             val token = task.result
             Log.d("토큰 값 : ", token)
 
             // 서버 URL 확인
-            Log.d("Server URL", serverUrl)
+            Log.d("Server URL", tokenUrl)
 
-            if (serverUrl.isEmpty()) {
+            if (tokenUrl.isEmpty()) {
                 Log.e("SendToken", "Server URL is empty!")
                 return@OnCompleteListener
             }
@@ -62,7 +59,7 @@ class FCMTokenManager(private val context: Context) {
             val body = json.toRequestBody(mediaType)
 
             val request = Request.Builder()
-                .url(serverUrl)
+                .url(tokenUrl)
                 .post(body)
                 .build()
 
@@ -76,25 +73,14 @@ class FCMTokenManager(private val context: Context) {
                     if (response.isSuccessful) {
                         val responseBody = response.body?.string() ?: "No response body"
                         Log.d("SendToken", "Token sent successfully: $responseBody")
-                        showToast("토큰 전송 성공")
                     } else {
                         Log.e("SendToken", "Failed to send token: $responseCode")
-                        showToast("토큰 전송 실패")
                     }
                 } catch (e: Exception) {
                     Log.e("SendToken", "Error during request: ${e.message}")
                     Log.e("SendToken", "Stack Trace: ", e)  // 예외의 Stack Trace 출력
-                    showToast("토큰 전송 중 에러 발생")
                 }
             }.start()
         })
     }
-    private fun showToast(message: String) {
-        // UI 스레드에서 토스트 메시지를 표시
-        (context as? Activity)?.runOnUiThread {
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
 }

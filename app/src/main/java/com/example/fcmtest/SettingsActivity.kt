@@ -30,7 +30,7 @@ class SettingsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Column {
-                Util.TopBanner(this@SettingsActivity, "설정", BackButton = true)
+                TopBanner.create(this@SettingsActivity, "서버 연결", BackButton = true)
                 SettingsScreen()
             }
         }
@@ -69,7 +69,7 @@ fun SettingsScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("전송하기")
+                Text("연결")
             }
         }
     }

@@ -18,7 +18,7 @@ import org.json.JSONObject
 //FCM 자동처리 클래스
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    override fun onNewToken(token: String) { //최초 앱 실행에만 실행
+    override fun onNewToken(token: String) { //최초 앱 실행에만 실행되는 토큰생성함수
         super.onNewToken(token)
         sendTokenToServer(token)    //실패한 경우??
         Log.d("FCM", "New token: $token")
@@ -56,7 +56,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) { //앱이 포그라운드상태에서도 알림을 받도록 하는 메소드
         Log.d("FCM TEST", "알림 받기 성공")
 
         // 메시지에 포함된 데이터 처리
@@ -68,10 +68,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.d("알림 내용","타이틀: " + it.title + "\n내용: " + it.body)
             sendNotification(it.title ?: "알림", it.body ?: "내용 없음")
         }
-        if (remoteMessage.data.isNotEmpty()) {
+        if (remoteMessage.data.isNotEmpty()) { //낙상 아이디와 타임스탬프가 포함되어있음
+            //낙상 기록을 처리하는 로직을 추가해야함.
             sendNotification(
-                remoteMessage.data["title"] ?: "데이터 알림",
-                remoteMessage.data["message"] ?: "데이터 내용 없음"
+                remoteMessage.data["fall_id"] ?: "데이터 알림",
+                remoteMessage.data["timestamp"] ?: "데이터 내용 없음"
             )
         }
     }

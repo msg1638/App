@@ -11,8 +11,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sendTokenToServer(context: Context) {
-        val fcmTokenManager = FCMTokenManager(context)
-        fcmTokenManager.setServerUrl(serverUrl)
-        fcmTokenManager.sendTokenToServer()
+        FallAPIClient.setServerUrl(serverUrl)
+        FallAPIClient.sendTokenToServer()
     }
 }

@@ -22,9 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-object Util {
+object TopBanner {
     @Composable
-    fun TopBanner(activity: Activity?, title: String, BackButton : Boolean = false) {
+    fun create(activity: Activity?, title: String, BackButton : Boolean = false) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

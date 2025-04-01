@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Column {
-                Util.TopBanner(this@MainActivity, "낙상 감지 프로그램")
+                TopBanner.create(this@MainActivity, "낙상 감지 프로그램")
                 MainScreen()
             }
         }
