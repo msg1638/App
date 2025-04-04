@@ -83,7 +83,7 @@ fun VideoPlayer(videoUrl: String) {
         factory = { PlayerView(context).apply { this.player = player } },
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp) // 비디오 크기 조정 가능
+            .height(250.dp) // 비디오 크기 조정
     )
 
     DisposableEffect(Unit) {
