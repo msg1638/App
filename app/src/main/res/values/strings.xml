@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">낙상 감지</string>
+    <string name="game_view_content_description">Game View</string>
+</resources>
