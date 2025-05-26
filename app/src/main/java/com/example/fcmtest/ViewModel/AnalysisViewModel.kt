@@ -33,10 +33,12 @@ class AnalysisViewModel(application: Application) : ViewModel() {
             return ""
         }
         val directionMap = mapOf(
-            "Fall Forward" to "정면",
-            "Fall Backward" to "후면",
-            "Fall Left" to "측면",
-            "Fall Right" to "측면"
+            "Fall Forward" to "정면 낙상",
+            "Fall Backward" to "후면 낙상",
+            "Fall Left" to "측면 낙상",
+            "Fall Right" to "측면 낙상",
+            "Fall Down" to "힘풀림",
+            "Fall Slide" to "미끄러짐"
         )
 
         return try {

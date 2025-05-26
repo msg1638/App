@@ -77,7 +77,7 @@ fun VideoPlayer(
             playerView?.player = null
             player.clearVideoSurface() // <-- 여기는 안전한 시점입니다
             player.stop()
-            player.clearMediaItems()
+            //player.clearMediaItems()
             playerView = null
         }
     }

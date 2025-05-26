@@ -308,7 +308,7 @@ fun AnalysisDetailScreen(
                                                 text = if (model.analysismodel.getFallType()
                                                         .isBlank()
                                                 ) "-"
-                                                else "${model.analysismodel.getFallType()} 낙상",
+                                                else model.analysismodel.getFallType(),
                                                 style = TextStyle(
                                                     fontSize = 18.sp,
                                                     lineHeight = 24.sp,
@@ -417,7 +417,10 @@ fun AnalysisDetailScreen(
 
                                                     }
                                                 } else {
-                                                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd){
+                                                    Box(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        contentAlignment = Alignment.CenterEnd
+                                                    ) {
                                                         LazyRow(
                                                             state = jointState
                                                         ) {
@@ -621,7 +624,6 @@ fun AnalysisDetailScreen(
                                                     .background(color, shape = CircleShape)
                                             )
                                         }
-
                                     }
                                 }
                             }
