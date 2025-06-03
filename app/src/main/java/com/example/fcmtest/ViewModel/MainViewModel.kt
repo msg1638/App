@@ -70,7 +70,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             /*repository.eventFlow.collect{
                 _fallEvents.value = it
             }*/
-            repository.example1()
+            //repository.example1()
             LoadingState.show()
             checkStatus()
             LoadingState.hide()

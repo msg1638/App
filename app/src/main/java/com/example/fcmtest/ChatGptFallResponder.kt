@@ -23,45 +23,50 @@ class ChatGptFallResponder(
         .build()
     private val apiUrl = "https://api.openai.com/v1/chat/completions"
     private val injuryGuidelinesJson = """
-    {
-      "commonSeriousInjuries": [
-        "대퇴골 골절",
-        "척추 압박골절",
-        "머리 손상"
-      ],
-      "injuryDetails": {
-        "골반뼈와 대퇴골의 골절": {
-          "description": "65세 이상 노인에서 낙상으로 자주 발생. 대퇴골 경부 골절 시 인공관절 수술 가능. 합병증(욕창, 패혈증) 주의.",
-          "expectedComplications": ["욕창", "패혈증"]
-        },
-        "척추 압박골절": {
-          "description": "척추뼈가 으스러져 눌려 앉음. 심한 경우 신경 압박 가능. 노인 여성 골다공증 환자 다수.",
-          "symptomClues": ["지속적 근육통", "허리 압통"]
-        },
-        "머리 손상": {
-          "description": "외상성 뇌출혈 위험. 음주 노인 남성에서 발생률 높음.",
-          "statistics": {"TBI": 53.6, "OtherHeadInjuries": 22.1}
-        },
-        "기타 부위 손상": {
-          "description": "팔(21.7%), 다리(15.8%), 몸통(9.3%), 엉덩이(8.4%), 척추(5.4%).",
-          "commonMechanism": "손으로 땅 짚기 → 손목 골절"
-        }
-      },
-      "fractureCarePrinciples": [
-        "환자를 함부로 옮기지 말 것",
-        "출혈 시 직접 압박 후 드레싱",
-        "노출된 뼈를 억지로 밀어넣지 말 것",
-        "가능한 움직이지 않게 고정"
-      ],
-      "siteSpecificTreatment": {
-        "척추 골절": ["머리 및 목 손으로 고정", "모포로 덮고 의료 지원 대기"],
-        "팔 골절": ["팔을 가슴에 고정", "팔–가슴 사이에 부드러운 천 삽입"],
-        "골반 골절": ["다리 곧게 눕히기", "무릎 밑 담요 말아 받치기", "쇼크 주의"],
-        "발 골절": ["신발·양말 벗기기", "헝겊·부목으로 고정"],
-        "쇄골 골절": ["팔을 반대쪽 가슴에 고정", "삼각건으로 지지 후 이송"]
+{
+  "흔한 중증 손상": [
+    "대퇴골 골절",
+    "척추 압박골절",
+    "머리 손상"
+  ],
+  "손상 세부 정보": {
+    "골반뼈와 대퇴골의 골절": {
+      "설명": "대퇴골 경부 골절 시 인공관절 수술 가능. 합병증(욕창, 패혈증) 주의.",
+      "예상 합병증": ["욕창", "패혈증"]
+    },
+    "척추 압박골절": {
+      "설명": "척추뼈가 으스러져 눌려 앉음. 심한 경우 신경 압박 가능. 노인 여성 골다공증 환자 다수.",
+      "증상 단서": ["지속적 근육통", "허리 압통"]
+    },
+    "머리 손상": {
+      "설명": "외상성 뇌출혈 위험.",
+      "통계": {
+        "외상성 뇌손상(TBI)": 53.6,
+        "기타 머리 손상": 22.1
       }
+    },
+    "기타 부위 손상": {
+      "설명": "팔(21.7%), 다리(15.8%), 몸통(9.3%), 엉덩이(8.4%), 척추(5.4%).",
+      "흔한 기전": "손으로 땅 짚기 → 손목 골절"
     }
+  },
+  "골절 처치 원칙": [
+    "환자를 함부로 옮기지 말 것",
+    "출혈 시 직접 압박 후 드레싱",
+    "노출된 뼈를 억지로 밀어넣지 말 것",
+    "가능한 움직이지 않게 고정"
+  ],
+  "부위별 처치 방법": {
+    "척추 골절": ["머리 및 목 손으로 고정", "모포로 덮고 의료 지원 대기"],
+    "팔 골절": ["팔을 가슴에 고정", "팔–가슴 사이에 부드러운 천 삽입"],
+    "골반 골절": ["다리 곧게 눕히기", "무릎 밑 담요 말아 받치기", "쇼크 주의"],
+    "발 골절": ["신발·양말 벗기기", "헝겊·부목으로 고정"],
+    "쇄골 골절": ["팔을 반대쪽 가슴에 고정", "삼각건으로 지지 후 이송"]
+  }
+}
+
     """.trimIndent()
+
     fun getFallResponse(
         fallDirection: String,
         additionalInput: String = "",
@@ -77,7 +82,8 @@ class ChatGptFallResponder(
             put("messages", JSONArray().apply {
                 put(JSONObject().apply {
                     put("role", "system")
-                    put("content", """
+                    put(
+                        "content", """
 당신은 낙상 응급처치 전문가입니다.  
 아래 **119 응급처치 가이드라인**(JSON 형식)과 보호자의 낙상신고를 참고하여 2개의 단락으로 제시해주세요.
 첫번째 단락(상황분석) : 비전문 보호자가 이해할 수 있도록 낙상 방향 및 부상 부위로 인한 예상 손상 및 주의점을 간단하게 한글 100자 내외로 설명해주세요.  
@@ -90,7 +96,8 @@ $injuryGuidelinesJson
   
 2단락의 내용(번호(예시 : 1. 2. 3.)가 매겨진 단계별 응급처치 방법)  
 - 모호한 표현 없이 구체적인 조치와 병원 이송 기준을 포함하세요.
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                 })
                 put(JSONObject().apply {
                     put("role", "user")
@@ -136,7 +143,8 @@ $injuryGuidelinesJson
                         onError("응답이 비어 있습니다.")
                     }
                 } else {
-                    val errorMessage = "API 요청 실패: ${response.code} ${response.message}\n본문: $responseBody"
+                    val errorMessage =
+                        "API 요청 실패: ${response.code} ${response.message}\n본문: $responseBody"
                     Log.e("ChatGptFallResponder", errorMessage)
                     onError(errorMessage)
                 }
@@ -150,14 +158,13 @@ $injuryGuidelinesJson
         additionalInput: String
     ): String {
 
-        val direction = if(fall_direction.isBlank())"알 수 없음" else fall_direction
+        val direction = if (fall_direction.isBlank()) "알 수 없음" else fall_direction
         return """
             넘어진 방향: $direction.
             손상 부위(관절)들 : $fall_joint.
             추가 사항: $additionalInput.
         """.trimIndent()
     }
-
 
 
 }
